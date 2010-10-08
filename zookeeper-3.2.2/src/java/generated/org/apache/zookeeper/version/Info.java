@@ -6,6 +6,6 @@ public interface Info {
     public static final int MAJOR=3;
     public static final int MINOR=2;
     public static final int MICRO=2;
-    public static final int REVISION=888565;
-    public static final String BUILD_DATE="12/08/2009 21:51 GMT";
+    public static final int REVISION=-1;
+    public static final String BUILD_DATE="10/08/2010 04:38 GMT";
 }
