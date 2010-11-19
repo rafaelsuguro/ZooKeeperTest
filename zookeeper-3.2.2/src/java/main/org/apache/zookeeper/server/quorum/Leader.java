@@ -203,6 +203,18 @@ public class Leader {
      */
     final static int SYNC = 7;
     
+    /**
+     * This message type is sent by a leader to inform that a new server is available.
+     */
+    final static int JOIN = 16;
+    
+
+    /**
+     * This message type is sent by a leader to inform that a server is no longer available.
+     */
+    final static int LEAVE = 17;
+    
+    
     private ConcurrentMap<Long, Proposal> outstandingProposals = new ConcurrentHashMap<Long, Proposal>();
 
     ConcurrentLinkedQueue<Proposal> toBeApplied = new ConcurrentLinkedQueue<Proposal>();
