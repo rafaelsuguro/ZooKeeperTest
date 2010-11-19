@@ -245,4 +245,12 @@ public class FollowerZooKeeperServer extends ZooKeeperServer {
     public String getState() {
         return "follower";
     }
+    
+    public boolean addServer(long sid, String addr_str, int port, int election_port){
+    	return this.self.addQuorumPeer(sid, addr_str, port, election_port);
+    }
+    
+    public boolean removeServer(long sid){
+    	return this.self.removeQuorumPeer(sid);
+    }
 }

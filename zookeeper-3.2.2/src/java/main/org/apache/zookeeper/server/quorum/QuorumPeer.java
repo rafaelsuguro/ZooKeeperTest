@@ -720,6 +720,34 @@ public class QuorumPeer extends Thread implements QuorumStats.Provider {
     public void setQuorumPeers(Map<Long,QuorumServer> quorumPeers) {
         this.quorumPeers = quorumPeers;
     }
+    
+    public boolean addQuorumPeer(long sid, String addr_str, int port, int election_port){
+        InetSocketAddress addr = new InetSocketAddress(addr_str, port);
+        
+        if(this.quorumPeers.containsValue(sid))
+        	return false;
+        
+        if (election_port == 0) {
+            this.quorumPeers.put(sid, new QuorumServer(sid, addr));
+        } else {
+            InetSocketAddress electionAddr = new InetSocketAddress(
+                    addr_str, election_port);
+            this.quorumPeers.put(sid, new QuorumServer(sid, addr,
+                    electionAddr));
+        }
+        this.updateQuorumConfig();
+        return true;
+    }
+    
+    public boolean removeQuorumPeer(long sid){
+    	if(!this.quorumPeers.containsValue(sid))
+    		return false;
+    	
+		this.quorumPeers.remove(sid);
+		this.updateQuorumConfig();;
+    	
+		return true;
+    }
 
     public int getClientPort() {
         return cnxnFactory.getLocalPort();
@@ -734,5 +762,9 @@ public class QuorumPeer extends Thread implements QuorumStats.Provider {
     
     public FileTxnSnapLog getTxnFactory() {
         return this.logFactory;
+    }
+    
+    private void updateQuorumConfig(){
+    	this.quorumConfig = new QuorumMaj(this.quorumPeers.size());    	
     }
 }

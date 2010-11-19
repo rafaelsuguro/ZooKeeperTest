@@ -312,6 +312,23 @@ public class Follower {
                     case Leader.SYNC:
                         zk.sync();
                         break;
+                    case Leader.JOIN:
+                        bis = new ByteArrayInputStream(qp
+                                .getData());
+                        dis = new DataInputStream(bis);
+                        long sid = dis.readLong();
+                        int port = dis.readInt();
+                        int election_port = dis.readInt();
+                        String addr_str = dis.readUTF();
+                    	zk.addServer(sid, addr_str, port, election_port);
+                    	break;
+                    case Leader.LEAVE:
+                        bis = new ByteArrayInputStream(qp
+                                .getData());
+                        dis = new DataInputStream(bis);
+                        sid = dis.readLong();
+                    	zk.removeServer(sid);
+                    	break;
                     }
                 }
             } catch (IOException e) {

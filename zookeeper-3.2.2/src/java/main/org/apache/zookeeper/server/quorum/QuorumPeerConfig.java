@@ -279,14 +279,14 @@ public class QuorumPeerConfig {
 
     public void addServer(long sid, String addr_str, int port, int election_port){
         InetSocketAddress addr = new InetSocketAddress(addr_str, port);
-                if (election_port == 0) {
-                    servers.put(sid, new QuorumServer(sid, addr));
-                } else {
-                    InetSocketAddress electionAddr = new InetSocketAddress(
-                            addr_str, election_port);
-                    servers.put(sid, new QuorumServer(sid, addr,
-                            electionAddr));
-                }
+        if (election_port == 0) {
+            servers.put(sid, new QuorumServer(sid, addr));
+        } else {
+            InetSocketAddress electionAddr = new InetSocketAddress(
+                    addr_str, election_port);
+            servers.put(sid, new QuorumServer(sid, addr,
+                    electionAddr));
+        }
         quorumVerifier = new QuorumMaj(servers.size());
     }
 
