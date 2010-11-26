@@ -80,6 +80,9 @@ public class ZooKeeperMain {
         commandMap.put("printwatches", "on|off");
         commandMap.put("quit","");
         commandMap.put("addauth", "scheme auth");
+        commandMap.put("addserver", "host port");
+        commandMap.put("removeserver", "host");
+        commandMap.put("printservers", "");
     }
 
     static void usage() {
@@ -777,6 +780,21 @@ public class ZooKeeperMain {
                 b = args[2].getBytes();
 
             zk.addAuthInfo(args[1], b);
+        } else if (cmd.equals("addserver") && args.length ==2 ) {
+        	String host = args[1];
+        	int port = Integer.parseInt(args[2]);
+        	if(zk.addServer(host, port))
+        		System.out.println("Server added.");
+        	else
+        		System.out.println("Error adding server.");
+        } else if (cmd.equals("removeserver") && args.length ==1 ) {
+        	String host = args[1];
+        	if(zk.removeServer(host))
+        		System.out.println("Server remove.");
+        	else
+        		System.out.println("Error removing server.");
+        } else if (cmd.equals("printservers") && args.length ==0 ) {
+        	zk.printServers();
         } else {
             usage();
         }

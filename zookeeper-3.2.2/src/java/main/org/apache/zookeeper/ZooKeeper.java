@@ -1308,4 +1308,16 @@ public class ZooKeeper {
     public States getState() {
         return state;
     }
+    
+    public boolean addServer(String host, int port){
+    	return cnxn.addServer(host, port);
+    }
+    
+    public boolean removeServer(String host){
+    	return cnxn.removeServer(host);
+    }
+    
+    public void printServers(){
+    	cnxn.printServers();
+    }
 }

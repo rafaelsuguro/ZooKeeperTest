@@ -1138,4 +1138,31 @@ public class ClientCnxn {
                 new AuthPacket(0, scheme, auth), null, null, null, null,
                 null, null);
     }
+    
+    public boolean addServer(String host, int port){
+    	for (InetSocketAddress isa : serverAddrs) {
+			if(isa.getHostName().equals(host))
+				return false;
+		}
+    	
+    	InetSocketAddress addr = new InetSocketAddress(host, port);
+    	
+    	return serverAddrs.add(addr);
+    	
+    }
+    
+    public boolean removeServer(String host){
+    	for (InetSocketAddress isa : serverAddrs) {
+			if(isa.getHostName().equals(host)){
+				return serverAddrs.remove(isa);
+			}
+    	}
+    	return false;
+    }
+    
+    public void printServers(){
+    	for (InetSocketAddress isa : serverAddrs) {
+			System.out.println(isa.getHostName()+":"+isa.getPort());
+		}
+    }
 }
