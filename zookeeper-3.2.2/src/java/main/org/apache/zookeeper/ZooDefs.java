@@ -57,6 +57,10 @@ public class ZooDefs {
         public final int closeSession = -11;
 
         public final int error = -1;
+        
+        public final int join = 16;
+        
+        public final int leave = 17;
     }
 
     public interface Perms {
@@ -108,5 +112,5 @@ public class ZooDefs {
 
     final public static String[] opNames = { "notification", "create",
             "delete", "exists", "getData", "setData", "getACL", "setACL",
-            "getChildren", "getMaxChildren", "setMaxChildren", "ping" };
+            "getChildren", "getMaxChildren", "setMaxChildren", "ping", "join", "leave" };
 }

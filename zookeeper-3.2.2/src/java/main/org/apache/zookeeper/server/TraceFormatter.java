@@ -55,6 +55,10 @@ public class TraceFormatter {
             return "createSession";
         case OpCode.closeSession:
             return "closeSession";
+        case OpCode.join:
+            return "join";
+        case OpCode.leave:
+            return "leave";
         case OpCode.error:
             return "error";
         default:

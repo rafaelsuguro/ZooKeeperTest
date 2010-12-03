@@ -18,6 +18,8 @@
 
 package org.apache.zookeeper.server.quorum;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 import org.apache.zookeeper.server.Request;

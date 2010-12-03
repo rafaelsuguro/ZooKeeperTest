@@ -35,6 +35,8 @@ import org.apache.zookeeper.txn.CreateSessionTxn;
 import org.apache.zookeeper.txn.CreateTxn;
 import org.apache.zookeeper.txn.DeleteTxn;
 import org.apache.zookeeper.txn.ErrorTxn;
+import org.apache.zookeeper.txn.JoinTxn;
+import org.apache.zookeeper.txn.LeaveTxn;
 import org.apache.zookeeper.txn.SetACLTxn;
 import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnHeader;
@@ -68,6 +70,12 @@ public class SerializeUtils {
             break;
         case OpCode.error:
             txn = new ErrorTxn();
+            break;
+        case OpCode.join:
+            txn = new JoinTxn();
+            break;
+        case OpCode.leave:
+            txn = new LeaveTxn();
             break;
         }
         if (txn != null) {

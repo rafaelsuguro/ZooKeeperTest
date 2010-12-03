@@ -83,6 +83,8 @@ public class FollowerRequestProcessor extends Thread implements
                 case OpCode.setACL:
                 case OpCode.createSession:
                 case OpCode.closeSession:
+                case OpCode.join:
+                case OpCode.leave:
                     zks.getFollower().request(request);
                     break;
                 }

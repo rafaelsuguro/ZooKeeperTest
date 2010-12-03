@@ -83,6 +83,8 @@ public class ZooKeeperMain {
         commandMap.put("addserver", "host port");
         commandMap.put("removeserver", "host");
         commandMap.put("printservers", "");
+        commandMap.put("joinserver", "host port election_port");
+        commandMap.put("leaveserver", "host");
     }
 
     static void usage() {
@@ -795,6 +797,14 @@ public class ZooKeeperMain {
         		System.out.println("Error removing server.");
         } else if (cmd.equals("printservers")) {
         	zk.printServers();
+        } else if  (cmd.equals("joinserver") && args.length ==4 ) {
+        	String host = args[1];
+        	int port = Integer.parseInt(args[2]);
+        	int election_port = Integer.parseInt(args[3]);
+        	zk.joinServer(host, port, election_port);
+        } else if  (cmd.equals("leaveserver") && args.length ==2 ) {
+        	String host = args[1];
+        	zk.leaveServer(host);
         } else {
             usage();
         }

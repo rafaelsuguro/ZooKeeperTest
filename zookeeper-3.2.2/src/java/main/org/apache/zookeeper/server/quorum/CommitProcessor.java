@@ -125,6 +125,8 @@ public class CommitProcessor extends Thread implements RequestProcessor {
                         case OpCode.setACL:
                         case OpCode.createSession:
                         case OpCode.closeSession:
+                        case OpCode.join:
+                        case OpCode.leave:
                             nextPending = request;
                             break;
                         case OpCode.sync:

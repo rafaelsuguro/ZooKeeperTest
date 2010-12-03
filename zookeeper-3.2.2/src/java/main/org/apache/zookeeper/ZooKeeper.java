@@ -55,6 +55,8 @@ import org.apache.zookeeper.proto.SetDataResponse;
 import org.apache.zookeeper.proto.SyncRequest;
 import org.apache.zookeeper.proto.SyncResponse;
 import org.apache.zookeeper.server.DataTree;
+import org.apache.zookeeper.proto.JoinRequest;
+import org.apache.zookeeper.proto.LeaveRequest;
 
 /**
  * This is the main class of ZooKeeper client library. To use a ZooKeeper
@@ -1319,5 +1321,39 @@ public class ZooKeeper {
     
     public void printServers(){
     	cnxn.printServers();
+    }
+    
+    public void joinServer(String host, int port, int election_port) 
+    throws InterruptedException, KeeperException{
+        
+        RequestHeader h = new RequestHeader();
+        h.setType(ZooDefs.OpCode.join);
+        JoinRequest request = new JoinRequest();
+        
+        request.setPort(port);
+        request.setElectionPort(election_port);
+        request.setHost(host);
+        
+        ReplyHeader r = cnxn.submitRequest(h, request, null, null);
+        if (r.getErr() != 0) {
+            throw KeeperException.create(KeeperException.Code.get(r.getErr()),
+                    null);
+        }
+    }
+    
+    public void leaveServer(String host) 
+    throws InterruptedException, KeeperException{
+        
+        RequestHeader h = new RequestHeader();
+        h.setType(ZooDefs.OpCode.leave);
+        LeaveRequest request = new LeaveRequest();
+        
+        request.setHost(host);
+        
+        ReplyHeader r = cnxn.submitRequest(h, request, null, null);        
+        if (r.getErr() != 0) {
+            throw KeeperException.create(KeeperException.Code.get(r.getErr()),
+                    null);
+        }
     }
 }

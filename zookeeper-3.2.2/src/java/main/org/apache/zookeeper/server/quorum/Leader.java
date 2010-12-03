@@ -19,6 +19,7 @@
 package org.apache.zookeeper.server.quorum;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.StringBuffer;
 import java.net.BindException;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -39,6 +41,9 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.jute.BinaryOutputArchive;
 import org.apache.log4j.Logger;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.proto.JoinRequest;
+import org.apache.zookeeper.proto.LeaveRequest;
 import org.apache.zookeeper.server.FinalRequestProcessor;
 import org.apache.zookeeper.server.Request;
 import org.apache.zookeeper.server.RequestProcessor;
@@ -482,6 +487,13 @@ public class Leader {
                         sendSync(r);
                     }
                 }
+                if(p.request.txn instanceof JoinRequest){
+                	JoinRequest jr = (JoinRequest)p.request.txn;
+            		commitJoin(jr, zxid);
+                }else if(p.request.txn instanceof LeaveRequest){
+                	LeaveRequest jr = (LeaveRequest)p.request.txn;
+            		commitLeave(jr, zxid);
+                }
                 return;
             } else {
                 lastCommitted = zxid;
@@ -489,7 +501,45 @@ public class Leader {
         }
     }
 
-    static class ToBeAppliedRequestProcessor implements RequestProcessor {
+    private void commitLeave(LeaveRequest request, long zxid){
+    	QuorumPacket qp = new QuorumPacket(Leader.LEAVE, zxid, null, null);
+    	Random r = new Random();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(bos);
+		
+        try {
+			dos.writeLong(r.nextLong());
+			dos.writeUTF(request.getHost());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        qp.setData(bos.toByteArray());
+        
+        sendPacket(qp);
+		
+	}
+
+	private void commitJoin(JoinRequest request, long zxid){
+		QuorumPacket qp = new QuorumPacket(Leader.JOIN, zxid, null, null);
+		Random r = new Random();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(bos);
+		
+        try {
+			dos.writeLong(r.nextLong());
+			dos.writeInt(request.getPort());
+	        dos.writeInt(request.getElectionPort());
+	        dos.writeUTF(request.getHost());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        qp.setData(bos.toByteArray());
+        
+        sendPacket(qp);
+	}
+
+	static class ToBeAppliedRequestProcessor implements RequestProcessor {
         private RequestProcessor next;
 
         private ConcurrentLinkedQueue<Proposal> toBeApplied;
